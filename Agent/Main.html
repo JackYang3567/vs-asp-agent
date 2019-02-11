@@ -1,0 +1,113 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+    <script src="js/ManageCommon.js"></script>
+    <script type="text/javascript">
+        function GetStr() {
+            return $("#AgentName").html();
+        }
+        var QueryRight = 0;
+        var IsClient = 0;
+        //页面初始化
+        $(document).ready(function () {
+            ReData();
+            //setInterval("ReData()", 300000);//180000为：3分钟
+        });
+        function ReData() {
+            $.SendData(true, { doType: 11, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (data) {
+                $("#Score").text(data.Score);
+                $("#AgentNum").text(data.AgentRate * 100 + "%");
+                $("#AgentID").text(data.AgentAcc);
+                QueryRight = parseInt(data.QueryRight);
+                IsClient = parseInt(data.IsClient);
+                $.each(data.menus, function (i, item) {
+                    if (i == 0) {
+                        $("#Main").attr("src", item.prefixUrl+".html");
+                    }
+                    $(".leftmenu ul").append('<li><a href="' + item.prefixUrl + '.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;' + item.key + '</a></li>');
+                });
+                if (IsClient == 2) {
+                    $("#lblAgentNum").remove();
+                    $("#AgentNum").remove();
+                }
+            });
+        }
+        function isExt(o,j){
+            if(o < j){
+                return false;
+            }
+            return ((o & j) == j);
+        }
+        function LoginOut() {
+            $.SendData_Text(true, { doType: 12, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (data) {
+                location.href = "login.html";
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+    <div id="leftlist">
+        <!--top-->
+        <div id="top">
+            <div id="top_a">
+                <div class="top_b">
+                    您的代理号：<span class="yellow" id="AgentID"></span>
+                    &nbsp;|&nbsp;代理余额：<span class="yellow" id="Score"></span><label id="lblAgentNum">&nbsp;|&nbsp;棋牌电玩比例：</label><span class="yellow" id="AgentNum">%</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" class="a" onclick="if (confirm('是否退出？')){LoginOut();}">安全退出</a>
+                </div>
+            </div>
+        </div>
+        <!--top_a end-->
+        <!--content_aa-->
+        <div class="content_aa">
+            <!--左导航 -->
+            <div class="left">
+                <div class="content_m_nav">
+
+                    <ul class="expmenu">
+
+                        <li>
+                            <div class="header">
+                                <div class="label" style="cursor:pointer; float:left;">导航</div>
+                                <!--<div class="arrow up" style=" float:left;"></div>-->
+                            </div>
+                            <div class="leftmenu">
+                                <ul class="menu" style="display:inline;">
+                                    <!--<li><a href="new.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;代理信息</a></li>
+                                    <li><a href="notice.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;代理公告</a></li>
+                                    <li><a href="revise.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;资料修改</a></li>
+                                    <li><a href="game.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;玩家管理</a></li>
+                                    <li><a href="agent.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;代理管理</a></li>
+									<li><a href="baobiao.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;我的报表</a></li>
+                                    <li><a href="recordcs.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;我的抽水记录</a></li>-->                                   
+                                    <!--<li><a href="BankRecord.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;玩家充值记录</a></li>-->
+                                    <!--<li><a href="change.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;金币变化记录</a></li>
+                                    <li><a href="agent_win.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;代理输赢情况</a></li>
+                                    <li><a href="game_win.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;玩家输赢情况</a></li>
+                                    <li><a href="money.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;提款</a></li>
+                                    <li><a href="DuiHuanRecord.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;提款记录</a></li>
+                                    <li id="pay" style="display:none"><a href="pay.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;订单充值</a></li>
+                                    <li id="payOrder" style="display:none"><a href="payOrder.html" target="Main"><img src="images/icon_arrow_list1.gif" />&nbsp;订单充值记录</a></li>-->
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 左导航结束-->
+            <!--右侧内容-->
+            <div class="right">
+                <iframe id="Main" name="Main" src="" style="width: 100%; height: 100%; margin-top: 0px; margin-left: 0px;" frameborder="0" scrolling="no"></iframe>
+            </div>
+            <!--右侧内容结束-->
+        </div>
+    </div>
+</body>
+</html>

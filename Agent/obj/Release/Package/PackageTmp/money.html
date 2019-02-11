@@ -1,0 +1,243 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="js/ManageCommon.js"></script>
+    <!--<script src="RGJS/ckinfoUpdate.js" type="text/javascript"></script>-->
+    <style type="text/css">
+        .STYLE1 {
+            color: #FFCC00;
+        }
+
+        .STYLE2 {
+            color: #FF0000;
+        }
+
+        .STYLE5 {
+            color: #FFFFFF;
+        }
+
+        .changeinput {
+            border: 1px dashed #eb340a !important;
+        }
+
+        .STYLEmy {
+            color: #FF0000;
+            font-size: 14px;
+        }
+    </style>
+
+    <script type="text/javascript">
+        //遮盖层对象
+        var loadObj;
+        //页面初始化
+        $(document).ready(function () {
+            $.SendData(true, { doType: 2, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (data) {
+                data = data[0];
+                //系统状态 是否开启
+                $("#SysState").text(data.IsOpen == 1 ? "开启" : "关闭");
+                //结算时间 按周计算
+                var zhou = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+                var week = "";
+                for (var i = 0; i < 7; i++) {
+                    if ((data.WeekOpenDay & Math.pow(2, i)) > 0) {
+                        week += zhou[i] + ","
+                    }
+                }
+                week = week.substr(0, week.length - 1);
+                $("#OpenWeek").text(week);
+                //每天开始时间
+                $("#stime").text(data.SOpenTime);
+                //每天结束时间
+                $("#etime").text(data.EOpenTime);
+
+                //汇率
+                $("#ApplyRate").text(data.BalancePrice);
+
+                //最低结算金额
+                $("#MinApply").text(data.MinBalance);
+
+                //手续费比例
+                $("#ApplyEndRate").text(data.CounterFee * 100);
+
+
+                //手续费最低金额
+                $("#MinScore").text(data.MinCounterFee);
+
+                //每天最多申请次数
+                $("#ApplyNum").text(data.DailyApplyTimes);
+            });
+            AgentInfo();
+        });
+        var AgentInfo = function () {
+            $.SendData(true, { doType: 11, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (data) {
+                $("#Score").text(data.Score);
+                $("#AgentId").text(data.AgentAcc);
+                $("#TureName").text(data.RealName);
+                $("#BankID").val(data.BankAcc);
+                $("#BankName").val(data.BankName);
+                $("#BankAddress").val(data.BankAddress);
+            });
+        }
+        //提交信息
+        function UpInfo() {
+            var bankName = $("#BankName").val();
+            var bankAddress = $("#BankAddress").val();
+            var bankCode = $("#BankID").val();
+            if (bankName.length < 2 || bankName.length > 20) {
+                alert("请输入开户行名称,不要多于20字");
+                return false;
+            }
+            if (bankAddress.length < 2 || bankAddress.length > 50) {
+                alert("请输入开户行地址,不要多于50字");
+                return false;
+            }
+            if (bankCode.length < 2 || bankAddress.length > 30) {
+                alert("请输入正确的银行卡号");
+                return false;
+            }
+            if (/^[0-9]+$/.test(bankCode) == false) {
+                alert("银行卡号必须为数字形式的");
+                return;
+            }
+            var endScore = $("#EndScore").val();
+
+            if (/^[0-9]{1,7}$/.test(endScore) == false) {
+                alert("请输入结算金币，大于0的整数");
+                return;
+            }
+            if (parseInt(endScore) < 1) {
+                alert("请输入结算金币，大于0的整数");
+                return;
+            }
+            $.SendData_Text(true, { doType: 3, pscore: endScore, bankname: bankName, banktitle: bankCode, bankaddress: bankAddress, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (data) {
+                if (data == 1) {
+                    $("#EndScore").val("");
+                    $("#BankName").val("");
+                    $("#BankID").val("");
+                    $("#BankAddress").val("");
+                    //loadObj.hide();
+                    alert("结算申请成功，请等待订单处理!");
+                    AgentInfo();
+                }
+                else {
+                    alert(data);
+                }
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <!--<div class="right1">
+                <p class="title">提款</p>
+            </div> -->
+            <div class="right_content2">
+                <div class="tab_nav_div">
+                    <li class="title">提款</li>
+                </div>
+                <div class="right2" style=" border: #bed5f3 1px solid; width: 100%; margin: 20px auto;">
+                    <div id=xgzl style=" height:100%;width:95%; margin:20px auto; padding-bottom:20px;">
+                        <div id=xgzl2 style="color:#666; line-height:35px;">
+                            <table width="95%" border="0" height="300px">
+                                <tr>
+                                    <td width="20%" align="right" class="black">账户金币：</td>
+                                    <td align="left"><span id="Score"></span></td>
+                                </tr>
+                                <tr>
+                                    <td width="20%" align="right" class="black">代理账号：</td>
+                                    <td align="left"><span id="AgentId"></span></td>
+                                </tr>
+                                <tr>
+                                    <td width="20%" align="right" class="black">真实姓名：</td>
+                                    <td align="left"><span id="TureName"></span></td>
+                                </tr>
+                                <tr>
+                                    <td width="20%" align="right" class="black">开户行名称：</td>
+                                    <td align="left">
+                                        <input name="" id="BankName" type="text" value="" class="input-text" />
+                                        <span id="BankNameTip" class="STYLEmy"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="10%" align="right" class="black">开户行账号：</td>
+                                    <td align="left">
+                                        <input name="" id="BankID" type="text" value="" class="input-text" />
+                                        <span id="BankIDTip" class="STYLEmy"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%" align="right" class="black">开户行地址：</td>
+                                    <td align="left">
+                                        <input name="" id="BankAddress" type="text" value="" class="input-text" />
+                                        <span id="BankAddressTip" class="STYLEmy"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%" align="right" class="black">结算金币：</td>
+                                    <td align="left">
+                                        <input name="" id="EndScore" type="text" value="" class="input-text" />
+                                        <span id="EndScoreTip" class="STYLEmy"></span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td width="20%" align="right"></td>
+                                    <td align="left"><a href="#" class="button"><span onclick="UpInfo();">提交</span></a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                    <div class="wxts" style="background: #fff; border: #bed5f3 1px solid; width: 80%; margin: 20px auto;">
+                        <h3>
+                            <img src="images/xdp.jpg" />温馨提示：
+                        </h3>
+                        <p>
+                            1.本系统每周 <span id="OpenWeek"></span>开放，开放时间为当天的<span id="stime"></span>点到<span id="etime"></span>点。
+                        </p>
+                        <p>
+                            2.本系统当前状态为<span id="SysState"></span>。
+                        </p>
+                        <p>
+                            3.当前系统金币价格为：<span id="ApplyRate"></span>金币=1元，每次最少结算<span id="MinApply"></span>金币。
+                        </p>
+                        <p>
+                            4.当前每次结算手续费为交易总额的<span id="ApplyEndRate"></span>%，最低手续费额为<span id="MinScore"></span>元 。每天最多提交结算申请<span id="ApplyNum"></span>次！
+                        </p>
+                        <p>
+                            5.成功提交结算申请后，您的账上的金币会被扣掉。如结算申请被拒绝后，相应的金币会返给您。
+                        </p>
+                        <p>
+                            6.请正确填写开户行，银行账号，开户行具体地址（例：某省某市某区某某分行）开户名需与注册时一致,以免影响出款.。
+                        </p>
+                        <p>
+                            7.可以通过结算记录查看该结算申请的处理状态。
+                        </p>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+</body>
+</html>

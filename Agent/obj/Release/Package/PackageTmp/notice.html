@@ -1,0 +1,34 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+    <script src="js/ManageCommon.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.SendData_Text(false, { doType: 19,r:Math.random()}, "/ashx/AgentManage.ashx", null, function (msg) {
+                $("#noticecontent").html(msg);
+            });
+        });
+    </script>
+
+
+</head>
+
+<body>
+
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="right_content2" id="noticecontent">
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

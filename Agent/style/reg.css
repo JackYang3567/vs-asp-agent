@@ -1,0 +1,59 @@
+/* CSS Document */
+ul,li{ list-style:none}
+img{ border:0px; border:none;}
+.clear{ clear:both;}
+
+.main{ max-width:1680px; min-height:500px; height:auto!important; height:500px;  }
+
+
+
+
+
+
+
+/*form*/
+
+.form{ padding-left:200px;  color:#ff9c00; min-height:100px; height:auto!important; height:100px; padding-top:25px; }
+.line{ height:35px; line-height:35px; overflow:hidden;}
+.line_1{ min-height:35px; height:auto!important; height:35px; line-height:35px;}
+.line span.form_txt,.line_1 span.form_txt{ display:block; float:left; text-align:right; font-size:14px; width:70px; line-height:35px;}
+
+
+.line span.erreo{ display:block; float:left; height:20px; width:20px; margin-top:5px;}
+.line span.input{ display:block; float:left; height:23px; width:215px; margin-top:6px;}
+
+.line span.erreo_1,.line_1 span.erreo_1{ background:url(../images/form_erreo.png) no-repeat 4px 1px;}
+.line span.erreo_2,.line_1 span.erreo_2{ background:url(../images/form_erreo.png) no-repeat -15px 1px; margin-right:3px;}
+.line span.erreo_3,.line_1 span.erreo_3{ background:url(../images/form_erreo.png) no-repeat -37px 1px;margin-right:3px;}
+.line span.erreo_4,.line_1 span.erreo_4{ background:url(../images/form_erreo.png) no-repeat -62px 1px;margin-right:3px;}
+.line span.ruo{ display:block; border:1px #000 solid; width:69px; text-align:center; font-size:14px; height:20px; line-height:20px; background:#ad844e; float:left; color:#000}
+.line span.ruo_on{background:#007cff;}
+.line span.zhong{ display:block; border:1px #000 solid; border-left:none; width:69px; text-align:center; font-size:14px; height:20px; background:#ad844e; line-height:20px; float:left; color:#000}
+.line span.zhong_on{background:#007cff;}
+.line span.qiang{ display:block; border:1px #000 solid; border-left:none;width:69px; text-align:center; font-size:14px; height:20px; background:#ad844e; line-height:20px; float:left; color:#000}
+.line span.qiang_on{background:#007cff;}
+.line span.select{ display: block; float: left; width:80px; height:25px; margin-top:300px }
+span.single{ height:20px; width:20px;  float:left; display:block; margin-top:2px;}
+span.single_01{ height:20px;float:left; display:block; line-height:20px;}
+span.single_02{ height:20px;float:left; display:block; width:45px; line-height:20px;}
+.line_1 a{ display:block; line-height:20px; float:left; margin-top:30px; margin-left:20px; text-decoration:underline; height:20px; width:80px; color:#007cff; font-size:14px;}
+.line_1 span.erreo{ display:block; float:left; height:20px; width:20px; margin-top:30px;}
+
+.line span.input a{ color:#ff9c00;  line-height:20px;}
+input.btn{ margin-left:50px;}
+
+
+
+.demo{width:300px;margin:40px auto;}
+/* mailBox */
+#mailBox{background:#fff;border:1px solid #ddd;padding:3px 5px 5px;position:absolute;z-index:9999;display:none;-webkit-box-shadow:0px 2px 7px rgba(0, 0, 0, 0.35);-moz-box-shadow:0px 2px 7px rgba(0, 0, 0, 0.35);}
+#mailBox p{width:100%;margin:0;padding:0;height:20px;line-height:20px;clear:both;font-size:12px;color:#ccc;cursor:default;}
+#mailBox ul{padding:0;margin:0;}
+#mailBox li{font-size:12px;height:22px;line-height:22px;color:#939393;font-family:'Tahoma';list-style:none;cursor:pointer;overflow:hidden;}
+#mailBox .cmail{color:#000;background:#e8f4fc;}
+
+
+/**/
+.line span.error{ display:block; float:left; margin-left:3px; width:200px; height:35px; line-height:35px; font-size:14px; color:blue;}
+.line span.right{display:block; float:left; height:20px; width:20px; margin-top:5px;background:url(../images/form_erreo.png) no-repeat -37px 1px;}
+

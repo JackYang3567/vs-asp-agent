@@ -1,0 +1,187 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    <script src="js/My97DatePicker/WdatePicker.js"></script>
+    
+    <style type="text/css">
+        .Time {
+            float:none;
+            margin-right:0;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var servername = "/ashx/AgentManage.ashx";
+        var currAgentAcc = "";
+        //充值控制
+        var ChongzhiCtrl = 0;
+        //得到头部登陆用户的信息
+        var aid = QueryString("id");
+        if (aid > 0)
+            currAgentAcc = QueryString("aname");
+        else {
+            currAgentAcc = parent.$("#AgentID").text();
+        }
+
+        //页面初始化
+        $(document).ready(function () {
+            //ShowData() 
+        });
+
+        var ShowData = function () {
+            var bTimeReg = $("#BeginTime").val();
+            var eTimeReg = $("#EndTime").val();
+            var bTimeLogin = $("#bTime").val();
+            var eTimeLogin = $("#eTime").val();
+            dataBind = new BindData({
+                serverName: servername,
+                postData: { doType: 9, account: $("#account").val(), aid: aid, bTimeReg: bTimeReg, eTimeReg: eTimeReg, bTimeLogin: bTimeLogin, eTimeLogin: eTimeLogin },
+                bData: function (v) {
+                    return {
+                        k: v.UserID, d: [v.GameID, v.Accounts,  v.Score, v.InsureScore, v.EnterID == null ? SetFontColor.Red("否") : SetFontColor.Green("是"), ConverTimeToDHMS(v.PlayTimeCount), v.RegisterDate, v.LastLogonDate, v.LastLogonIP, v.Nullity == 0 ? SetFontColor.Green("启用") : SetFontColor.Red("禁用")]
+                        //, v.Superior.toLowerCase() != currAgentAcc.toLowerCase() ? '<a href="javascript:void(0)" disabled = "true" style="#303030">充值</a>' : '<a href="javascript:CZFun(' + v.UserID + ')">充值</a>'
+                    }
+                }
+            }).Bind();
+        }
+        var czid = 0;
+        //代理充值显示AgentIDss
+        function CZFun(Agentid) {
+            var ID = Agentid;
+            if (ChongzhiCtrl == 0) {
+                czid = ID
+                ChongzhiCtrl = 1;
+                $('#' + ID).after('<tr class="STYLE6" id="' + ID + 'after"><td height="30px" colspan="12" >存入金额：<input name="current_password"' +
+              ' id="PScoreShow' + ID + '" type="text" value="" onfocus="javascript:this.select();"' +
+              ' class="input-text"><a href="javascript:AgentCZ(' + ID + ')" class="button2"><span class="an">确 定' +
+              '</span></a><a href="javascript:remobete(' + ID + ')" class="button2"><span class="an">取 消</span></a></td></tr>');
+            } else {
+                if (czid == ID) {
+                    $('#' + ID + 'after').remove();
+                    ChongzhiCtrl = 0;
+                }
+            }
+        }
+        //删除充值列
+        function remobete(id) {
+            $("#" + id + "after").remove();
+        }
+
+        //为下级代理充值
+        function AgentCZ(id) {
+            var score = $("#PScoreShow" + id).val()
+            if (score != "") {
+                if (score < 0.01) {
+                    alert("充值金额不正确 必须大于0.01")
+                    return;
+                }
+                $.SendData_Text(false, { doType: 14, uid: id, score: score, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (msg) {
+                    if (msg == 1) {
+                        $("#PScoreShow" + id).val("");
+                        $('#' + id + 'after').remove();
+                        alert("充值成功");
+                        ShowData();
+                        ChongzhiCtrl = 0;
+                    } else {
+                        alert(msg)
+                    }
+                });
+            } else {
+                alert("请输充值金币！");
+            }
+        }
+        function CloseDiv() {
+            $("#windownbg").remove();
+            $("#windown-box").fadeOut("slow", function () { $(this).remove(); });
+        }
+
+        function AddAgent() {
+            window.open('agent_add.html', 'newwindow', 'height=700, width=1000, top=100, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <!--<div class="right1">
+                <p class="title">代理管理</p>
+            </div> -->
+            <div class="right2">
+                <!--条件查询-->
+                <div class="wxts" style="background:#fff; border:#bed5f3 1px solid;">
+                    <h3>
+                        <img src="images/xdp.jpg" />温馨提示：
+                    </h3>
+                    <p>1：首页显示直接玩家，不支持模糊查询。</p>
+                    <!--<p>2：点击"金币"，"在线时长"，"最后登陆时间"，"状态"进行升降排序</p>-->
+                    <!--<p>2：只能为直接玩家充值</p>-->
+
+                </div>
+
+
+                <div class="right2-top" style="width:95%">
+
+                    <span id="lx" name="lx" style=" height: 25px; float: left;">
+                        <span id="lx" name="lx" style=" height: 25px; float: left;">
+                            <p style="color:#000;">玩家账号：</p>
+                            <span class="input" style="margin-top:7px;">
+                                <input class="x8" type="text" id="account" value="" />
+                            </span>
+                            <p style="color:#000;">注册时间：</p>
+                            <span class="input" style="margin-top:7px;">
+                                <input type="text" id="BeginTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />—<input type="text" id="EndTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                            </span>
+                            <p style="color:#000;">登录时间：</p>
+                            <span class="input" style="margin-top:7px;">
+                                <input type="text" id="bTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />—<input  type="text" id="eTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                            </span>
+                            <a href="#" class="button2"><span class="an" onclick="ShowData()">搜索</span></a>
+                        </span>
+
+                    </span>
+                </div>
+                <div class="right4">
+                    <div style="margin-left: 3%;" id="ptotalcount"> <p>查询总人数<span style=" color:red" id="TJ"></span>人</p></div>
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr class="STYLE5 ff">
+                            <td width="5%" height="30px">玩家ID</td>
+                            <td width="7%">玩家账号</td>
+                            <!--<td width="7%">真实姓名</td>-->
+                            <td width="7%">携带金币</td>
+                            <td width="7%">银行金币</td>
+                            <td width="5%">是否在线</td>
+                            <td width="7%">游戏时长</td>
+                            <td width="10%">注册日期</td>
+                            <td width="10%">登录日期</td>
+                            <td width="8%">登录IP</td>
+                            <td width="5%">状态</td>
+                            <!--<td width="8%">操作</td>-->
+                        </tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>

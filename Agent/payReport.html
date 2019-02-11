@@ -1,0 +1,124 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    <script src="js/My97DatePicker/WdatePicker.js"></script>
+
+    <style type="text/css">
+        font {
+            margin: 0 10px;
+            color: red;
+        }
+
+        p span {
+            margin: 0 10px;
+            color: red;
+            font-size: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        var pURL = "/ashx/AgentManage.ashx";
+        var type = new Array();
+        //页面初始化
+        $(document).ready(function () {
+            ShowData();
+            $('.queren').click(function () {
+                var id = $(this).attr("data-id");
+                if (id <= 0) {
+                    alert("参数错误")
+                    return;
+                }
+                $.post(pURL, { doType: 35, ID: id }, function (data) {
+
+                })
+            })
+        });
+
+        var ShowData = function () {
+            new BindData({
+                serverName: pURL,
+                postData: { doType: 34 },
+                bData: function (v) {
+                    var payfee = (v.sFillAmount * v.FillRate / 100).toFixed(2);
+                    var pay = v.sFillAmount - payfee;
+                    var drawfee = v.DrawFee * v.DrawTimes;
+                    var draw = v.DrawAmount + drawfee;
+                    var shijishouru = (pay - draw).toFixed(2);
+                    var caozuo = "";
+                    if (v.CheckStatus == 2)
+                        caozuo += " <a class='queren' href=\"javascript:void(0)\"  data-id=\"" + v.ID + "\">确认无误</a>";
+                    return {
+                        k: v.ID, d: [v.YearMonth, v.sFillAmount, v.FillRate + '%', payfee, pay, v.DrawAmount, v.DrawFee, v.DrawTimes, drawfee, draw, shijishouru, v.FillRevRate == 0 ? "未设置" : v.FillRevRate + '%', v.FillRevRate == 0 ? "未设置提成比例" : (shijishouru * v.FillRevRate / 100).toFixed(2), GetState(v.CheckStatus), caozuo]
+                    }
+                }
+            }).Bind();
+        }
+        function GetState(state) {
+            switch (state) {
+                case 0:
+                    return "本月统计中"
+                case 1:
+                    return "<font color=red>等待运营商确认</font>"
+                case 2:
+                    return "<font color=blue>等待代理确认</font>"
+                case 3:
+                    return "<font color=green>双方确认完毕</font>"
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="tab_nav_div">
+                <li class="title">充值提成</li>
+            </div>
+            <div class="right2">
+                <div class="right4">
+                    <div style="margin-left:3%">
+                        <p>提示：报表数据<span>不含今日</span><span>不含今日</span><span>不含今日</span></p>
+                        <p>计算公式：充值手续费=总充值*充值汇率<font>实际充值=总充值-充值手续费</font>提现手续费=单笔手续费*提现次数<font>实际提现=总提现+提现手续费</font>实际收入=实际充值-实际提现<font>提成=实际收入*提成比例</font></p>
+                    </div>
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr bgcolor="#b2b2b2" class="STYLE5">
+                            <th>时间</th>
+                            <th>总充值</th>
+                            <th>充值汇率</th>
+                            <th>充值手续费</th>
+                            <th>实际充值</th>
+                            <th>总提现</th>
+                            <th>单笔手续费</th>
+                            <th>提现次数</th>
+                            <th>提现手续费</th>
+                            <th>实际提现</th>
+                            <th>实际收入</th>
+                            <th>提成比例</th>
+                            <th>提成</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>

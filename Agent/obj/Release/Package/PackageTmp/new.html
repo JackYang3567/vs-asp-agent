@@ -1,0 +1,123 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+    <script src="js/ManageCommon.js"></script>
+    <link rel="stylesheet" type="text/css" href="style/daili.css" />
+
+    <script src="js/clipboard.min.js"></script>
+    <script type="text/javascript">
+        //页面初始化
+        var loadObj;
+        $(document).ready(function () {
+            $.SendData(true, { doType: 13, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (data) {
+                //代理账户
+                $("#AgentID").text(data.Agent.AgentAcc);
+                //代理抽水比例
+                $("#AgentNum").text(data.Agent.AgentRate * 100 + "%");
+                //金币
+                $("#Score").text(data.Agent.Score + " 金币");
+
+                if (data.Agent.AgentStatus == 0) {
+                    $("#zhuangtai").text("启用");
+                } else {
+                    $("#zhuangtai").text("禁用");
+                }
+                $("#LastLogonDate").text(data.Agent.LastDate);
+
+                $("#RegisterDate").text(data.Agent.RegDate);
+
+                $("#CZScore").text(data.CZScore + " 金币");
+
+
+                var agentUrl = "";
+                if (data.Agent.AgentDomain.length > 0) {
+                    agentUrl = agentUrl + "http://" + data.Agent.AgentDomain + ",";
+                }
+                if (data.AgentURL.regTgAddr1.length > 0) {
+                    agentUrl = agentUrl + "http://" + data.Agent.AgentAcc + "." + data.AgentURL.regTgAddr1;
+                }
+                if (data.AgentURL.regTgAddr2.length > 0) {
+                    agentUrl = agentUrl + ",http://" + data.Agent.AgentAcc + "." + data.AgentURL.regTgAddr2;
+                }
+                if (data.AgentURL.regTgAddr3.length > 0) {
+                    agentUrl = agentUrl + ",http://" + data.Agent.AgentAcc + "." + data.AgentURL.regTgAddr3;
+                }
+                $("#agenturl").text(agentUrl);
+                $("button").attr("data-clipboard-text", agentUrl);
+                var tgUrl = "";
+                if (data.Agent.AgentDomain.length > 0) {
+                    tgUrl = tgUrl + "http://" + data.Agent.AgentDomain + ",";
+                }
+                if (data.AgentURL.mainTgAddr1.length > 0) {
+                    tgUrl = tgUrl + "http://" + data.Agent.AgentAcc + "." + data.AgentURL.mainTgAddr1;
+                }
+                if (data.AgentURL.mainTgAddr2.length > 0) {
+                    tgUrl = tgUrl + ",http://" + data.Agent.AgentAcc + "." + data.AgentURL.mainTgAddr2;
+                }
+                if (data.AgentURL.mainTgAddr3.length > 0) {
+                    tgUrl = tgUrl + ",http://" + data.Agent.AgentAcc + "." + data.AgentURL.mainTgAddr3;
+                }
+                $("#Tgurl").text(tgUrl);
+            });
+
+            var clipboard = new Clipboard('.btn');
+            clipboard.on('success', function (e) {
+                alert("已成功复制到剪切板！");
+            });
+            clipboard.on('error', function (e) {
+                alert('浏览器不支持复制功能，请手动复制！');
+            });
+        });
+    </script>
+    <style>
+        button {
+            border: none;
+            width: 348px;
+            height: 47px;
+            background: url(images/tuig.png) no-repeat;
+            margin:10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="right_content2">
+                <div class="tab_nav_div">
+                    <li class="title">推广地址</li>
+                </div>
+                <br />
+                <p class='hong'>注册推广码地址：</p>
+                <br />
+                <p class='pb1'><span id="agenturl"></span></p>
+                <button class="btn" data-clipboard-text=""></button>
+                <br />
+                <p class='hong'>首页推广码地址：</p>
+                <br />
+                <p class='pb1'><span id="Tgurl"></span></p>
+                <br />
+                <div class="tab_nav_div">
+                    <li class="title">推广信息</li>
+                </div>
+                <ul>
+                    <li><div class="th">代理账号：</div><div class="td" id="AgentID"></div></li>
+                    <li><div class="th">代理资金：</div><div class="td" id="Score"></div></li>
+                    <li><div class="th">抽水比例：</div><div class="td" id="AgentNum"></div></li>
+                    <li><div class="th">用户状态：</div><div class="td" id="zhuangtai"></div></li>
+                    <li><div class="th">注册时间：</div><div class="td" id="RegisterDate"></div></li>
+                    <li><div class="th">最后登录时间：</div><div class="td" id="LastLogonDate"></div></li>
+                    <li><div class="th">玩家当天充值总和：</div><div class="td" id="CZScore"></div></li>
+                    <li style='border-bottom: 1px solid #bed5f3;'></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

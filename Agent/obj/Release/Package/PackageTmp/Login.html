@@ -1,0 +1,160 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理员登录</title>
+
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/style/login.css" />
+    <script>
+
+        document.onkeydown = function (event) {
+
+            e = event ? event : (window.event ? window.event : null);
+
+            if (e.keyCode == 13) {
+
+                //执行的方法
+
+                login($("#btnSubmit"));
+
+            }
+
+        }
+        window.onload = function Get() {
+
+            //createCode();
+
+        };
+        var code; //在全局 定义验证码
+        //function createCode() {
+        //    code = "";
+        //    var codeLength = 4; //验证码的长度
+        //    var checkCode = document.getElementById("checkCode");
+        //    var selectChar = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //所有候选组成验证码的字符，当然也可以用中文的
+        //    for (var i = 0; i < codeLength; i++) {
+        //        var charIndex = Math.floor(Math.random() * 36);
+        //        code += selectChar[charIndex];
+        //    }
+        //    if (checkCode) {
+        //        checkCode.className = "code";
+        //        checkCode.value = code;
+        //        checkCode.blur();
+        //    }
+        //}
+
+        //function validate() {
+        //    var inputCode = document.getElementById("txtCode").value;
+        //    if (inputCode.length <= 0) {
+        //        //alert("请输入验证码！");
+        //        createCode();
+        //        return false;
+        //    }
+        //    else if (inputCode.toUpperCase() != code) {
+        //        //     hintMessage("txtCodeTip", "error", "验证码输入错误！");
+        //        createCode(); //刷新验证码
+        //        return false;
+        //    }
+        //    else {
+
+        //        return true;
+        //    }
+        //}
+        function login(button) {
+
+            var agentid = $("#username").val();
+
+            var password = $("#password").val();
+            password = password.replace(/\?/g, "%3F");
+            var txtcode = $("#txtCode").val();
+            if (agentid == "") {
+                alert("请输入账号！");
+                return;
+            }
+
+            var reg = /^[a-zA-Z0-9_\u4e00-]+$/;
+            if (!reg.test($("#username").val())) {
+                alert("错误的账号！")
+                return;
+            }
+
+            if ($("#username").val().length > 16) {
+                alert("用户名的长度为6-16个字符");
+                return;
+            }
+
+            if (password == "")
+            {
+                alert("请输入密码！");
+                return;
+            }
+
+            if (password.length < 6) {
+                alert("密码不足6位！");
+                return;
+            }
+            if (txtcode == "")
+            {
+                alert("请输入验证码！");
+                return;
+            }
+            //button.buttonDisabled(true);
+            $.post("/ashx/AgentManage.ashx", { doType: 10, account: agentid, passWord: password, vcode: txtcode, r: Math.random() }, function (msg) {
+                if (msg == 1) {
+                    window.location.href = "Main.html";
+                } else {
+                    alert(msg)
+                }
+                //button.buttonDisabled(false);
+            });
+        }
+        $(document).ready(function () {
+            $("#btnSubmit").click(function () {
+                
+                login($(this));
+            });
+
+            $("#username").focus();
+        });
+    </script>
+
+</head>
+
+<body>
+    <div class="login_div">
+        <div class="login_box">
+            <div class="login_content">
+                <dl>
+                    <dt>登录账号：</dt>
+                    <dd>
+                        <input name="txtUserName" type="text" id="username" class="login_input required valid" style="width:130px;" />
+
+                    </dd>
+                </dl>
+
+
+                <dl>
+                    <dt>登录密码：</dt>
+                    <dd><input name="txtUserPwd" type="password" id="password" class="login_input required valid" style="width:130px;" /></dd>
+                </dl>
+
+                <dl>
+                    <dt>验证码：</dt>
+                    <dd><input name="txtCode" type="text" id="txtCode" class="login_input required" style="width:40px; float:left;" maxlength="4"/></dd>
+                    &nbsp;
+                    <img id="vcode1" src="/ashx/verify_code.ashx" style="height: 20px; width: 50px; cursor: pointer" onclick="this.src = 'ashx/verify_code.ashx?' + Math.random()" alt="更换验证码" />
+
+                </dl>
+
+                <dl>
+                    <dt>&nbsp;&nbsp;&nbsp;</dt>
+                    <dd><input type="button" name="btnSubmit" value="登 录" id="btnSubmit" class="login_btn" /></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    <script src="js/My97DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript">
+        var pURL = "/ashx/AgentManage.ashx";
+        var type = new Array();
+        //页面初始化
+        $(document).ready(function () {
+            $("#BeginTime").SetDefaultDate(0, true);
+            $("#EndTime").SetDefaultDate(0, true);
+            //ShowData();
+        });
+
+        var ShowData = function () {
+            new BindData({
+                serverName: pURL,
+                postData: { doType: 31, keyword: $('#keyword').val(), sType: $("#ddlSearchType").val(), sTime: $("#BeginTime").val(), eTime: $("#EndTime").val(), r: Math.random() },
+                bData: function (v) {
+                    return {
+                        k: v.ID, d: [v.CollectDate, v.GameID, v.Accounts, v.PayAmount]
+                    }
+                }
+            }).Bind();
+        }
+    </script>
+</head>
+
+<body>
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="tab_nav_div">
+                <li class="title">玩家线下充值记录</li>
+            </div>
+            <div class="right2">
+                <!--条件查询-->
+                <div class="right2-top" style="width: 95%">
+                    <span id="lx" name="lx" style=" height: 25px; float: left;">
+                        <p style="color:#000;">开始时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="BeginTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        </span>
+                        <p style="color:#000;">结束时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="EndTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        </span>
+                        <p style="color:#000;">查询条件：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input class="x8" type="text" id="keyword" value="" placeholder="请输入玩家ID">
+                        </span>
+                        <span class="input" style="margin-top:7px;">
+                            <select class="x8" id="ddlSearchType">
+                                <!--<option value="1">按用户帐号</option>-->
+                                <option value="2">按玩家ID</option>
+                                <!--<option value="3">按订单号</option>-->
+                                <!--<option value="4">按推广人</option>-->
+                                <!--<option value="5">按下级代理人</option>-->
+                            </select>
+                        </span>
+                        <a href="javascript:ShowData();" class="button2"><span class="an">搜索</span></a>
+                    </span>
+                </div>
+                <div class="right4">
+                    <div style="margin-left:3%"> <p>在该条件下充值总额为<span style=" color:red" id="sum"></span>金币</p></div>
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr bgcolor="#b2b2b2" class="STYLE5"><td width="12%" height="30px">充值时间</td><td>玩家ID</td><td>用户帐号</td><td>充值金币</td></tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>

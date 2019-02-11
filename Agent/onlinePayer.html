@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        var pURL = "/ashx/AgentManage.ashx";
+        var type = new Array();
+        var gameList = new Array(), roomList = new Array();
+        //页面初始化
+        $(document).ready(function () {
+            $.post(pURL, { doType: 32 }, function (data) {
+                var data = $.parseJSON(data);
+                $.each(data, function () {
+                    gameList[this.KindID] = this.KindName
+                });
+            })
+
+            $.post(pURL, { doType: 33, kid: 0 }, function (data) {
+                var roomJson = $.parseJSON(data);
+                $.each(roomJson, function () {
+                    roomList[this.ServerID] = this.ServerName
+                });
+            })
+            
+            ShowData();
+           
+        });
+
+        var ShowData = function () {
+            $.ajaxSetup({ aysnc: true });
+            if (gameList.length > 0 || roomList.length > 0) {
+                new BindData({
+                    serverName: pURL,
+                    postData: { doType: 36, keyword: $('#keyword').val(), r: Math.random() },
+                    bData: function (v) {
+                        return {
+                            k: v.UserID, d: [v.GameID, v.Accounts,  typeof (gameList[v.KindID]) == "undefined" ? "大厅" : gameList[v.KindID], typeof (roomList[v.ServerID]) == "undefined" ? "大厅" : roomList[v.ServerID], v.LastLogonIP, v.LastLogonIPAddress, v.LastLogonDate, ConverTimeToDHMS(v.PlayTimeCount), v.Nullity == 0 ? "正常" : "停权"]
+                        }
+                    }
+                }).Bind();
+            } else {
+                $.post(pURL, { doType: 32 }, function (data) {
+                    var data = $.parseJSON(data);
+                    $.each(data, function () {
+                        gameList[this.KindID] = this.KindName
+                    });
+                    if (gameList.length > 0) {
+                        $.post(pURL, { doType: 33, kid: 0 }, function (data) {
+                            var roomJson = $.parseJSON(data);
+                            $.each(roomJson, function () {
+                                roomList[this.ServerID] = this.ServerName
+                            });
+                        });
+                        if (gameList.length > 0 && roomList.length > 0) {
+                            new BindData({
+                                serverName: pURL,
+                                postData: { doType: 36, keyword: $('#keyword').val(), r: Math.random() },
+                                bData: function (v) {
+                                    return {
+                                        k: v.UserID, d: [v.GameID, v.Accounts,  typeof (gameList[v.KindID]) == "undefined" ? "大厅" : gameList[v.KindID], typeof (roomList[v.ServerID]) == "undefined" ? "大厅" : roomList[v.ServerID], v.LastLogonIP, v.LastLogonIPAddress, v.LastLogonDate, ConverTimeToDHMS(v.PlayTimeCount), v.Nullity == 0 ? "正常" : "停权"]
+                                    }
+                                }
+                            }).Bind();
+                        }
+                    }
+                });
+            }  
+        }
+        var ConverTimeToDHMS = function (seconds) {
+            if (seconds <= 0)
+                return "0秒";
+            var str = "";
+            var day = parseInt(seconds / 0x15180);
+            var hour = parseInt((seconds % 0x15180) / 0xe10);
+            var minute = parseInt((seconds % 0xe10) / 60);
+            var second = parseInt(seconds % 60);
+            if (day > 0)
+                str += day + "天";
+            if (hour > 0)
+                str += hour + "小时";
+            else
+                str += "0小时";
+            if (minute > 0)
+                str += minute + "分";
+            else
+                str += "0分";
+            if (second > 0)
+                str += second + "秒";
+            else
+                str += "0秒";
+            return str;
+        };
+    </script>
+</head>
+<body>
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="tab_nav_div">
+                <li class="title">在线玩家</li>
+            </div>
+            <div class="right2">
+                <!--条件查询-->
+                <div class="right2-top" style="width: 95%">
+                    <span id="lx" name="lx" style=" height: 25px; float: left;">
+                        
+                        <p style="color:#000;">查询条件：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input class="x8" type="text" id="keyword" value="" placeholder="请输入玩家ID/玩家账号">
+                        </span>                      
+                        <a href="javascript:ShowData();" class="button2"><span class="an">搜索</span></a>
+                    </span>
+                </div>
+                <div class="right4">
+                    
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr bgcolor="#b2b2b2" class="STYLE5"><td width="8%" height="30px">玩家ID</td><td>玩家账号</td><td>所在游戏</td><td>所在房间</td><td>最后登录IP</td><td>IP归属地</td><td>最后登录时间</td><td>游戏时长</td><td>状态</td></tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+</html>

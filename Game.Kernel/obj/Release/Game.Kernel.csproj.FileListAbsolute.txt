@@ -1,0 +1,14 @@
+D:\Mywork\haotan\yibiyi\Agent\Game.Kernel\bin\Release\Game.Kernel.dll
+D:\Mywork\haotan\yibiyi\Agent\Game.Kernel\bin\Release\Game.Kernel.pdb
+D:\Mywork\haotan\yibiyi\Agent\Game.Kernel\bin\Release\Game.Utils.dll
+D:\Mywork\haotan\yibiyi\Agent\Game.Kernel\bin\Release\Game.Utils.pdb
+D:\Mywork\haotan\yibiyi\Agent\Game.Kernel\obj\Release\Game.Kernel.csprojResolveAssemblyReference.cache
+D:\Mywork\haotan\yibiyi\Agent\Game.Kernel\obj\Release\Game.Kernel.dll
+D:\Mywork\haotan\yibiyi\Agent\Game.Kernel\obj\Release\Game.Kernel.pdb
+D:\qipai\bl\src\网站代码\Agent\Game.Kernel\bin\Release\Game.Kernel.dll
+D:\qipai\bl\src\网站代码\Agent\Game.Kernel\bin\Release\Game.Kernel.pdb
+D:\qipai\bl\src\网站代码\Agent\Game.Kernel\bin\Release\Game.Utils.dll
+D:\qipai\bl\src\网站代码\Agent\Game.Kernel\bin\Release\Game.Utils.pdb
+D:\qipai\bl\src\网站代码\Agent\Game.Kernel\obj\Release\Game.Kernel.csprojResolveAssemblyReference.cache
+D:\qipai\bl\src\网站代码\Agent\Game.Kernel\obj\Release\Game.Kernel.dll
+D:\qipai\bl\src\网站代码\Agent\Game.Kernel\obj\Release\Game.Kernel.pdb

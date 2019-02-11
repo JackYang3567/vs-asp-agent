@@ -1,0 +1,141 @@
+﻿.header{
+	height: 153px;
+	background: url(../images/dailihbg.png) repeat-x left top;
+}
+.header .logo{
+	width: 255px;
+	height: 118px;
+}
+.header .logo h1{
+	height: 118px;
+}
+.header .logo h1 a{
+	display: block;
+	height: 118px;
+	background: url(../images/logo.png) no-repeat left center;
+}
+.header p {
+	font-size: 12px;
+	padding-top: 12px;
+	text-indent: 3em;
+}
+.header p  span{
+	color: red;
+}
+.header p  a{
+	text-decoration:none;
+	color: #444;
+}
+.ge{
+	height: 10px;
+	font-size: 0px;
+	background:#EAC128;
+}
+.left_content{
+	width: 250px;
+	float: left;
+}
+.left_content .daohang{
+	width: 150px;
+	height: 130px;
+}
+.left_content .daohang a {
+	display: block;
+}
+/* .content{
+	width: 1200px;
+	margin: 0 auto;
+}
+.headers{
+	width: 1200px;
+	margin: 0 auto;
+} */
+.left_content .daohang a img{
+	width: 100%:
+}
+.left_content .ulx{
+	width: 250px;
+	overflow: hidden;
+}
+.dalip {
+	float: left;
+	margin-right: 12px;
+}
+.left_content .ulx ul li{
+	height: 46px;
+	overflow: hidden;
+	padding-left: 68px;
+	background: url(../images/libg1.png)  no-repeat left top;
+}
+.left_content .ulx ul li.cur {
+	background: url(../images/libg2.png)  no-repeat left top;
+} 
+.left_content .ulx ul li a{
+	text-decoration:none;
+	color: #444;
+	line-height: 52px;
+}
+.left_content .ulx ul li.cur a{
+	text-decoration:none;
+	color:red;
+}
+.right_content{
+	float: left;
+    margin-top: 12px;
+	border: 1px solid #EAC128;
+	margin-left: 16px;
+	width: 74%;
+	height: 710px;
+	min-width: 500px;
+	position:absolute;
+	left: 260px;
+	top: 0px;
+    padding:0px 0px 0px 0px;
+}
+.right_content .tp {
+	border-bottom: 1px solid #bed5f3;
+}
+.right_content .tp img{
+	margin-bottom: -7px;
+}
+.hong{
+	color: red;
+	font-weight: bold;
+}
+.pb1{
+	border: 1px solid #bed5f3;
+	line-height: 50px;
+	color: #3108FF;
+	font-weight: bold;
+	padding-left: 12px;
+}
+.pb2{
+	border: 1px solid #bed5f3;
+	line-height: 50px;
+	color: #3108FF;
+	padding-left: 12px;
+    font-size:12px;
+    padding-bottom:10px;
+}
+
+.right_content ul  {
+	margin-top: 22px;
+}
+.right_content ul li {
+	border: 1px solid #bed5f3;
+	overflow: hidden;
+	line-height: 35px;
+	padding-left: 12px;
+	border-bottom: 0px;
+}
+.right_content ul li div{
+	float: left;
+}
+.right_content ul li div.th{
+	width:500px;
+}
+.right_content ul li div.td{
+	color: red;
+	font-weight: bold;
+}
+

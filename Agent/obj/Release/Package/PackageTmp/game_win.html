@@ -1,0 +1,116 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    <script src="js/My97DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript">
+        var pURL = "/ashx/AgentManage.ashx";
+        var type = new Array();
+        //页面初始化
+        $(document).ready(function () {
+            $("#BeginTime").SetDefaultDate(0, true);
+            $("#EndTime").SetDefaultDate(0, true);
+            ShowData()
+        });
+
+        var ShowData = function (t) {
+            var aname = (t == 1 || t == 2) ? "" : $('#Userid').val();
+            var date_ = new Date();
+            var year = date_.getFullYear();
+            var month = date_.getMonth() + 1;
+            var lyear = month == 1 ? (year - 1) : year;
+            var lmonth = month == 1 ? 12 : (month - 1);
+            var firstdate = year + '-' + month + '-01';
+            var lfirstdate = lyear + '-' + lmonth + '-01';
+            var day = new Date(year, month, 0);
+            var lday = new Date(lyear, lmonth, 0);
+            var lastdate = year + '-' + month + '-' + day.getDate();
+            var llastdate = lyear + '-' + lmonth + '-' + lday.getDate();
+            var sTime = t == 1 ? firstdate : (t == 2 ? lfirstdate : $("#BeginTime").val());
+            var eTime = t == 1 ? lastdate : (t == 2 ? llastdate : $("#EndTime").val());
+            $("#BeginTime").val(sTime);
+            $("#EndTime").val(eTime);
+            new BindData({
+                serverName: pURL,
+                postData: { doType: 18, type: 2, aname: aname, sTime: sTime, eTime: eTime, r: Math.random() },
+                bData: function (v) {
+                    return {
+                        k: v.UserID, d: [v.GameID, v.Accounts, v.AgentAcc, v.AgentRate * 100 + '%', v.GxRev, v.GameScore, '<a href="FUserCSList.html?id=' + v.AgentID + '&Account=' + v.Accounts + '&stime=' + $("#BeginTime").val() + '&etime=' + $("#EndTime").val() + '">详细</a>']
+                    }
+                }
+            }).Bind();
+        }
+        function ShowAll() {
+            window.location.reload();
+        }
+    </script>
+</head>
+
+<body>
+    <div id="ZZC">
+
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="right2">
+                <!--条件查询-->
+                <div class="wxts" style="background:#fff; border:#bed5f3 1px solid;">
+                    <h3>
+                        <img src="images/xdp.jpg" />温馨提示：
+                    </h3>
+                    <p>1：默认显示当天的玩家抽水记录，不支持模糊查询。</p>
+
+                </div>
+                <div class="right2-top" style="width: 95%">
+
+                    <span id="lx" name="lx" style=" height: 25px; float: left;">
+                        <p style="color:#000;">开始时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="BeginTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                            <!--<button style="background:url(images/grid-cal.gif) no-repeat; width:14px; height:14px; border:none;margin-top:10px" id="CalendarTO2"></button>-->
+                        </span>
+
+                        <p style="color:#000;">结束时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="EndTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                            <!--<button style="background:url(images/grid-cal.gif) no-repeat; width:14px; height:14px; border:none;margin-top:10px" id="CalendarTO"></button>-->
+                        </span>
+
+                        <p style="color:#000;">玩家账号：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input class="x8" type="text" id="Userid" value="" />
+                        </span>
+
+                        <a href="javascript:ShowData(0);" class="button2"><span class="an">搜索</span></a>
+                        <a href="javascript:ShowAll();" class="button2"><span class="an">搜索所有</span></a>
+                        <a href="javascript:ShowData(1);" class="button2"><span class="an">本月</span></a>
+                        <a href="javascript:ShowData(2);" class="button2"><span class="an">上月</span></a>
+                    </span>
+                </div>
+                <div class="right4">
+                    <div style="margin-left:3%"> <span>在该时间范围内实际抽水总额为<span style=" color:red" id="sum">0</span>金币！</span><span>实际总输赢为<span style=" color:red" id="sum1">0</span>金币！</span></div>
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr bgcolor="#b2b2b2" class="STYLE5"><td width="7%" height="30px">ID</td><td width="8%">玩家账户</td><td width="8%">所属代理</td><td width="7%">抽水比例</td><td width="5%">抽水总额</td><td width="5%">输赢情况 </td><td width="11%">操作</td></tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>

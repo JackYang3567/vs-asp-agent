@@ -1,0 +1,211 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link rel="stylesheet" type="text/css" href="style/reg.css" />
+    <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+
+    <script src="js/ManageCommon.js"></script>
+    <script type="text/javascript" src="js/reg/lrtk1.js"></script>
+    <script type="text/javascript" src="js/reg/passwordStrength.js"></script>
+    <script src="js/reg/seth.js" type="text/javascript"></script>
+
+    <script src="js/reg/auto.js" type="text/javascript"></script>
+    <!--<script src="RGJS/ck.js" type="text/javascript"></script>-->
+    <script src="js/reg/ckAddagent.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //top.loading1.hide();
+
+            $("#txtLogonPass").keydown(function () {
+
+                checkPassStr();
+            });
+        });
+
+        function Register() {
+            if (!checkAccounts()) {
+                $("#txtAccounts").focus(); return false;
+            }
+            if (!checkLoginPass()) { $("#txtLogonPass").focus(); createCode(); return false; }
+            if (!checkLoginConPass()) { $("#txtLogonPass2").focus(); createCode(); return false; }
+            if (!checkCompellation()) { $("#txtName").focus(); createCode(); return false; }
+
+            var agentid = $("#txtAccounts").val();
+            var pword = $("#txtLogonPass").val();
+            var agentNum = $("#AgentNum").val();
+            var trueName = $("#txtName").val();
+
+
+            //设置下级代理抽水比例 限制！
+            if (agentNum > 80) {//根据需求修改数值
+                alert("下级代理抽水比例不能大于80%！");
+                return false;
+            }
+            if (agentNum == "") {
+                alert("下级代理抽水比例不能为空！");
+                return false;
+            }
+            var re = /^[0-9]+$/;
+            if (!re.test(agentNum)) {
+                alert("下级代理抽水比例请输入一个正整数！");
+                return;
+            }
+            if (parseInt(agentNum) > 100 || parseInt(agentNum) < 1) {
+
+                alert("下级代理抽水比例请输入一个1-100的整数");
+                return;
+            }
+            $.SendData_Text(false, { doType: 1, account: agentid, password: pword, agentNum: agentNum, trueName: trueName, r: Math.random() }, "/ashx/AgentManage.ashx", null, function (msg) {
+                if (msg == 1) {
+                    $("#txtAccounts").val("");
+                    $("#txtLogonPass").val("");
+                    $("#txtName").val("");
+                    $("#txtLogonPass2").val("");
+                    $("#AgentNum").val("0");
+                    location.href = "agent.html";
+                } else {
+                    alert(msg)
+                }
+            });
+        }
+        function checkPassStr() {
+            var pas2 = $("#txtLogonPass").val();
+            if (pas2 != "") {
+
+                var strongRegex =
+                    new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+
+                var mediumRegex =
+                    new RegExp
+                    ("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+
+                var enoughRegex = new RegExp("(?=.{6,}).*", "g");
+
+                if (false == enoughRegex.test(pas2)) {
+                    //密码小于六位的时候，密码强度图片都为灰色
+                    $("#changeSrc").attr('src', 'images/mima.jpg');
+                } else if (strongRegex.test(pas2)) {
+                    //强,密码为八位及以上并且字母数字特殊字符三项都包括
+                    $("#changeSrc").attr('src', 'images/mima3.jpg');
+                } else if (mediumRegex.test(pas2)) {
+                    //中等,密码为七位及以上并且字母、数字、特殊字符三项中有两项，强度是中等
+                    $("#changeSrc").attr('src', 'images/mima2.jpg');
+                } else {
+                    //弱,如果密码为6为及以下，就算字母、数字、特殊字符三项都包括，强度也是弱的
+                    $("#changeSrc").attr('src', 'images/mima1.jpg');
+                }
+
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function MM_swapImgRestore() { //v3.0
+            var i, x, a = document.MM_sr; for (i = 0; a && i < a.length && (x = a[i]) && x.oSrc; i++) x.src = x.oSrc;
+        }
+        function MM_preloadImages() { //v3.0
+            var d = document; if (d.images) {
+                if (!d.MM_p) d.MM_p = new Array();
+                var i, j = d.MM_p.length, a = MM_preloadImages.arguments; for (i = 0; i < a.length; i++)
+                    if (a[i].indexOf("#") != 0) { d.MM_p[j] = new Image; d.MM_p[j++].src = a[i]; }
+            }
+        }
+
+        function MM_findObj(n, d) { //v4.01
+            var p, i, x; if (!d) d = document; if ((p = n.indexOf("?")) > 0 && parent.frames.length) {
+                d = parent.frames[n.substring(p + 1)].document; n = n.substring(0, p);
+            }
+            if (!(x = d[n]) && d.all) x = d.all[n]; for (i = 0; !x && i < d.forms.length; i++) x = d.forms[i][n];
+            for (i = 0; !x && d.layers && i < d.layers.length; i++) x = MM_findObj(n, d.layers[i].document);
+            if (!x && d.getElementById) x = d.getElementById(n); return x;
+        }
+
+        function MM_swapImage() { //v3.0
+            var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
+                if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
+        }
+    </script>
+</head>
+
+<body onload="MM_preloadImages('images/add1.png')">
+
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <!--<div class="right1">
+                <p class="title">代理管理</p>
+            </div> -->
+
+            <div class="right2">
+                <ul class="tab_nav">
+                    <li class="selected">开设下级代理</li>
+                </ul>
+                <div id=xgzl style="height:100%;width:95%; margin:20px auto; padding-bottom:20px;">
+                    <!--<div id=xgzl1 style="margin:10px 20px;"><span style="font-family:'微软雅黑'; font-size:20px; color:#6B6B6B;">开设下级代理</span></div> -->
+                    <div id=xgzl2 style="color:#666; line-height:35px;">
+                        <table width="95%" border="0" height="240">
+                            <tr>
+                                <td width="12%" align="right" class="black">代理账号：</td>
+                                <td align="left">
+                                    <input name="current_password" id="txtAccounts" type="text" value="" onfocus="javascript:this.select();" class="input-text" />
+                                    <span id="txtAccountsTip" class="STYLEmy"></span>
+                                    &nbsp;&nbsp;&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="12%" align="right" class="black">密码：</td>
+                                <td align="left">
+                                    <input name="current_password" id="txtLogonPass" type="password" value="" onfocus="javascript:this.select();" class="input-text" />
+                                    <span id="txtLogonPassTip" class="STYLEmy"></span>
+                                    &nbsp;&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="12%" align="right" class="black"></td>
+                                <td align="left">
+                                    <img src="images/mima.jpg" id="changeSrc" />
+                                    &nbsp;&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="12%" align="right" class="black">确认密码：</td>
+                                <td align="left">
+                                    <input name="current_password" id="txtLogonPass2" type="password" value="" onfocus="javascript:this.select();" class="input-text" />
+                                    <span id="txtLogonPass2Tip" class="STYLEmy"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="12%" align="right" class="black">真实姓名：</td>
+                                <td align="left">
+                                    <input name="current_password" id="txtName" type="text" value="" onfocus="javascript:this.select();" class="input-text" />
+                                    <span id="txtNameTip" class="STYLEmy">
+                                        &nbsp;&nbsp;
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="12%" align="right" class="black">抽水比例：</td>
+                                <td align="left">
+                                    <input name="current_password" id="AgentNum" type="text" value="" onfocus="javascript:this.select();" class="input-text" />
+                                    &nbsp;&nbsp;&nbsp;%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="12%" align="right"></td>
+                                <td align="left"><a href="#" class="button"><span onclick="Register();">确认添加</span></a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

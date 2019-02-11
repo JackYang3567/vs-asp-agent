@@ -1,0 +1,278 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <script src="js/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="js/ManageCommon.js"></script>
+    <script src="js/reg/CXJs.js" type="text/javascript"></script>
+
+    <script src="js/reg/ckinfoUpdate.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="style/daili.css" />
+
+
+    <!--     <script src="js/jquery.bgiframe.min.js" type="text/javascript" charset='utf-8'></script>
+        <script type="text/javascript" src="js/loading-min.js" charset="UTF-8"></script>
+        <link href="style/loading.css" type="text/css" rel="stylesheet"/>-->
+    <style type="text/css">
+        .STYLE1 {
+            color: #FFCC00;
+        }
+
+        .STYLE2 {
+            color: #FF0000;
+        }
+
+        .STYLE5 {
+            color: #FFFFFF;
+        }
+
+        .changeinput {
+            border: 1px dashed #eb340a !important;
+        }
+
+        .STYLEmy {
+            color: #FF0000;
+            font-size: 14px;
+        }
+    </style>
+
+
+
+    <script type="text/javascript">
+        var loadObj;
+        //页面初始化
+        var loadObj;
+        var pURL = "/ashx/AgentManage.ashx";
+        $(document).ready(function () {
+            $.SendData(true, { doType: 11, r: Math.random() }, pURL, null, function (data) {
+                $("#AgentID").text(data.AgentAcc);
+                $("#TrueName").text(data.RealName);
+                $("#BankName").val(data.BankName);
+                $("#BankID").val(data.BankAcc);
+                $("#BankAddress").val(data.BankAddress);
+            });
+            //loadObj = new ol.loading({ id: "ZZC" });
+            $("#NewPassWord2").keydown(function () {
+
+                checkPassStr();
+            });
+        });
+        //提交信息
+        function UpInfo() {
+            var bankName = $("#BankName").val();
+            var bankAddress = $("#BankAddress").val();
+            var bankCode = $("#BankID").val();
+            if (bankName.length < 2 || bankName.length > 20) {
+                alert("请输入开户行名称,不要多于20字");
+                return false;
+            }
+            if (bankAddress.length < 2 || bankAddress.length > 50) {
+                alert("请输入开户行地址,不要多于50字");
+                return false;
+            }
+            if (bankCode.length < 2 || bankAddress.length > 30) {
+                alert("请输入正确的银行卡号");
+                return false;
+            }
+            if (/^[0-9]+$/.test(bankCode) == false) {
+                alert("银行卡号必须为数字形式的");
+                return;
+            }
+            //var pas = $("#NewPassWord").val();
+            //if (trim(pas) != "") {
+            //    if (/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,16}$/.test(pas) == false) {
+            //        alert("密码必须是6-16位的英文数字组合!");
+            //        return;
+            //    }
+            //}
+
+            $.SendData_Text(false, { doType: 7, bankname: bankName, banktitle: bankCode, bankaddress: bankAddress,r:Math.random() }, pURL, null, function (msg) {
+                if (msg == 1)
+                {
+                    alert("资料修改成功");
+                } 
+                else
+                    alert(msg);
+            });
+           
+            //var reg = /^[a-zA-Z]w{5,17}$/;
+
+            //alert(reg.test($("#NewPassWord").val()));
+            //            alert($("#NewPassWord").val())
+            //            if (reg.test($("#NewPassWord").val())) {
+            //                loadObj.show();
+            //                var DataStr = "pword=" + $("#NewPassWord").val() + "&bankname=" + $("#BankName").val() + "&banktitle=" + $("#BankID").val() + "&bankaddress=" + $("#BankAddress").val();
+            //                DoAjaxCall("AgentMagane/UpdateAgentInfo.htm", "", "json", DataStr, "CallBackFun", "UpInfo");
+            //            } else {
+            //            alert("只能为英文或者数字或者下划线组成的6－18个字符");
+            //            }
+            //
+        }
+
+
+        //修改密码
+        function UpInfoPass() {
+            var pas = $("#NewPassWord").val();
+            var pas2 = $("#NewPassWord2").val();
+            var pas3 = $("#NewPassWord3").val();
+            pas2 = pas2.replace(/\?/g, "%3F");
+
+            if (!checkLoginPass()) {
+                $("#NewPassWord2").focus(); return false;
+            }
+            if (!checkLoginConPass()) {
+                $("#NewPassWord3").focus(); return false;
+            }
+            $.SendData_Text(false, { doType: 8, oldPass: pas, newPass: pas2, r: Math.random() }, pURL, null, function (msg) {
+                if (msg == 1) {
+                    alert("密码修改成功");
+                    $("#NewPassWord").val('')
+                    $("#NewPassWord2").val('')
+                    $("#NewPassWord3").val('')
+                }
+                else
+                    alert(msg);
+            });
+
+        }
+
+        function checkPassStr() {
+            var pas2 = $("#NewPassWord2").val();
+            if (pas2 != "") {
+
+                var strongRegex =
+                    new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+
+                var mediumRegex =
+                    new RegExp
+                    ("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+
+                var enoughRegex = new RegExp("(?=.{6,}).*", "g");
+
+                if (false == enoughRegex.test(pas2)) {
+                    //密码小于六位的时候，密码强度图片都为灰色
+                    $("#changeSrc").attr('src', 'images/mima.jpg');
+                } else if (strongRegex.test(pas2)) {
+                    //强,密码为八位及以上并且字母数字特殊字符三项都包括
+                    $("#changeSrc").attr('src', 'images/mima3.jpg');
+                } else if (mediumRegex.test(pas2)) {
+                    //中等,密码为七位及以上并且字母、数字、特殊字符三项中有两项，强度是中等
+                    $("#changeSrc").attr('src', 'images/mima2.jpg');
+                } else {
+                    //弱,如果密码为6为及以下，就算字母、数字、特殊字符三项都包括，强度也是弱的
+                    $("#changeSrc").attr('src', 'images/mima1.jpg');
+                }
+
+            }
+        }
+    </script>
+
+
+
+</head>
+
+<body>
+
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="right_content2">
+                <div class="tab_nav_div">
+                    <li class="title">修改资料</li>
+                </div>
+                <br />
+                <div class='pb2'>
+                    <div id=xgzl2 style="color:#666; line-height:35px;">
+                        <table width="95%" border="0" height="240">
+                            <tr>
+                                <td width="20%" align="right" class="black">代理账号：</td>
+                                <td align="left"><span id="AgentID"></span><a href="SystemInfo.html" style="color:#666;"></a></td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right" class="black">真实姓名：</td>
+                                <td align="left">
+                                    <!--<input name="current_password" id="TrueName" type="text" value="" onfocus="javascript:this.select();" class="input-text" />
+                                    <span id="TrueNameTip" class="STYLEmy"></span>-->
+                                    <span id="TrueName"></span><a href="SystemInfo.html" style="color:#666;"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right" class="black">开户行名称：</td>
+                                <td align="left">
+                                    <input name="current_password" id="BankName" type="text" value="" onfocus="javascript:this.select();" class="input-text" maxlength="10" />
+                                    <span id="BankNameTip" class="STYLEmy"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right" class="black">开户行地址：</td>
+                                <td align="left">
+                                    <input name="current_password" id="BankAddress" type="text" value="" onfocus="javascript:this.select();" class="input-text" maxlength="50" />
+                                    <span id="BankAddressTip" class="STYLEmy"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right" class="black">银行卡号：</td>
+                                <td align="left">
+                                    <input name="current_password" id="BankID" type="text" value="" onfocus="javascript:this.select();" class="input-text" maxlength="19" />
+                                    <span id="BankIDTip" class="STYLEmy"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right"></td>
+                                <td align="left"><a href="#" onclick="UpInfo()" class="button"><span>确认修改</span></a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="tab_nav_div">
+                    <li class="title">修改密码</li>
+                </div>
+                <br />
+                <div class='pb2'>
+                    <div id=xgzl2 style="color:#666; line-height:35px;">
+                        <table width="95%" border="0" height="200">
+                            <tr>
+                                <td width="20%" align="right" class="black">原密码：</td>
+                                <td align="left"><input name="current_password" id="NewPassWord" type="password" value="" onfocus="javascript:this.select();" class="input-text" /></td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right" class="black">新密码：</td>
+                                <td align="left">
+                                    <input name="current_password" id="NewPassWord2" type="password" value="" onfocus="javascript:this.select();" class="input-text" />
+                                    <span id="NewPassWord2Tip" class="STYLEmy"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right" class="black"></td>
+                                <td align="left"><img src="images/mima.jpg" id="changeSrc" /> </td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right" class="black">确认密码：</td>
+                                <td align="left">
+                                    <input name="current_password" id="NewPassWord3" type="password" value="" onfocus="javascript:this.select();" class="input-text" />
+
+                                    <span id="NewPassWord3Tip" class="STYLEmy"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%" align="right"></td>
+                                <td align="left"><a href="#" onclick="UpInfoPass();" class="button"><span>确认修改</span></a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+</body>
+</html>

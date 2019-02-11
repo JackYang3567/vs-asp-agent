@@ -1,0 +1,97 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    <script src="js/My97DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript">
+        var servername = "/ashx/AgentManage.ashx";
+        //页面初始化
+        $(document).ready(function () { ShowData() });
+
+        var ShowData = function () {
+            dataBind = new BindData({
+                serverName: servername,
+                postData: { doType: 6, sTime: $("#BeginTime").val(), eTime: $("#EndTime").val(), account: $('#account').val(), type: $('#CXLX').val() },
+                bData: function (v) {
+                    return {
+                        k: v.UserID, d: [v.GameID, v.Accounts, v.AgentAcc, v.SwapScore + v.SwapInsureScore, v.CollectDate]
+                    }
+                }
+            }).Bind();
+        }
+    </script>
+</head>
+
+<body>
+    <div id="ZZC">
+        
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="tab_nav_div">
+                <li class="title">玩家充值记录</li>
+            </div>
+            <div class="right2">
+                <!--条件查询-->
+                <div class="right2-top" style="width: 95%">
+                    <p>
+                    </p>
+                    <p>
+                        开始时间
+                    </p>
+                    <input name="x1" type="text" id="BeginTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    <p>
+                        结束时间
+                    </p>
+                    <input name="x2" type="text" id="EndTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                    <p>
+                        用户名
+                    </p>
+                    <input name="x3" type="text" id="account" class="x8" />
+                    <p>
+                        查询类型
+                    </p>
+                    <select name="x3" id="CXLX" class="x3">
+                        <option value="0">直接玩家</option>
+                        <option value="1">间接玩家</option>
+                    </select>
+
+
+                    <a href="javascript:ShowData();" class="button2"><span class="an">搜索</span></a>
+                    <p>
+                        充值统计：
+                    </p>
+                    <p>￥<font id="sum"></font></p>
+                </div>
+                <div class="right4">
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr class="STYLE5 ff">
+                            <td width="7%" height="35px">玩家ID</td>
+                            <td width="10%">玩家账号</td>
+                            <td width="8%">所属代理</td>
+                            <td width="7%">充值金币</td>
+                            <td width="10%">充值日期</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>

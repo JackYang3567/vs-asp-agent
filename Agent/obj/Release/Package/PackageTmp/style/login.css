@@ -1,0 +1,126 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{padding:0; margin:0; font-family:"微软雅黑"; font-size:12px;}
+body { background:#ffffff;}
+
+* {
+scrollbar-face-color: #E6F2FD;
+scrollbar-highlight-color: #ffffff;
+scrollbar-shadow-color: #D6E4EF;
+scrollbar-3dlight-color: #F1F9FF;
+scrollbar-arrow-color: #006699;
+scrollbar-track-color: #F1F9FF;
+scrollbar-darkshadow-color: #F1F9FF;
+}
+
+
+* {
+scrollbar-face-color: #E6F2FD;
+scrollbar-highlight-color: #ffffff;
+scrollbar-shadow-color: #D6E4EF;
+scrollbar-3dlight-color: #F1F9FF;
+scrollbar-arrow-color: #006699;
+scrollbar-track-color: #F1F9FF;
+scrollbar-darkshadow-color: #F1F9FF;
+}
+
+form, ul, li, dl, dt, dd {
+list-style-type: none;
+}
+
+
+
+.login_div {
+position: absolute;
+margin-top: -180px;
+width: 434px;
+margin-left: -217px;
+top: 50%;
+left: 50%;
+}
+.login_box{ 
+width:434px; 
+height:191px; 
+padding-top:75px; 
+background:url(../images/login_bg.gif) no-repeat;
+}
+
+.login_content {
+display: inline-block;
+float: left;
+margin-left: 110px;
+padding-top: 30px;
+width:201px;
+ height:170px;
+}
+.login_content dl {
+clear: both;
+height: 35px;
+}
+
+.login_content dl dt {
+float: left;
+font-family: "微软雅黑";
+color: #FFF;
+text-align: right;
+width: 65px;
+line-height: 24px;
+}
+.login_input {
+margin-top: 2px;
+padding: 0 3px;
+height: 22px;
+line-height: 22px;
+border: 0;
+background: #fff;
+font-family: "微软雅黑";
+}
+
+.login_btn {
+width: 78px;
+height: 24px;
+line-height: 22px;
+font-family: "微软雅黑";
+font-size: 12px;
+border: 0;
+background: url(../images/login_btn_bg.gif) no-repeat;
+cursor: pointer;
+}
+.l-verify-tip {
+padding: 0;
+margin: 0;
+position: absolute;
+display: block;
+}
+.l-verify-tip-corner {
+padding: 0;
+margin: 0;
+position: absolute;
+background: url(../images/verify-corner.gif) no-repeat;
+width: 8px;
+line-height: 9px;
+height: 9px;
+overflow: hidden;
+top: 5px;
+left: 0px;
+z-index: 10001;
+}
+.l-verify-tip-content {
+margin: 0;
+position: absolute;
+left: 7px;
+top: 0px;
+border: 1px solid #FFC340;
+background: #FFFCC7;
+z-index: 10000;
+padding: 0 8px;
+line-height: 22px;
+width: 100px;
+font-size: 12px;
+font-family: Verdana, Geneva, sans-serif;
+}
+img {
+border: 0px;
+vertical-align: middle;
+}

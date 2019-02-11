@@ -1,0 +1,202 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/tipswindown.js"></script>
+    <link rel="stylesheet" href="style/tipswindown.css" type="text/css" media="all" />
+    <script src="js/My97DatePicker/WdatePicker.js"></script>
+
+    <style type="text/css">
+        .STYLE1 {
+            color: #f60;
+        }
+
+        .STYLE2 {
+            color: #FF0000;
+        }
+
+        .STYLE4 {
+            color: #339900;
+        }
+
+        /*.STYLE5 {
+                color: #FFFFFF;
+                text-align: center;
+                font-weight: bold;
+                background: url(images/heading_bg.jpg) repeat-x;
+            }*/
+
+        .STYLE6 {
+            text-align: center;
+        }
+
+        /*.STYLE7 {
+                background-color: #ececec;
+            }
+
+            .STYLE8 {
+                background-color: #c9dae2;
+            }*/
+    </style>
+
+    <script type="text/javascript">
+        var servername = "/ashx/AgentManage.ashx";
+        var taobj;
+        //页面初始化
+        $(document).ready(function () { ShowData() });
+
+        var ShowData = function () {
+            dataBind = new BindData({
+                serverName: servername,
+                postData: { doType: 5, sTime: $("#BeginTime").val(), eTime: $("#EndTime").val() },
+                bData: function (v) {
+                    return {
+                        k: v.ID, d: [v.ID, v.OrderID, v.DealStatus == 0 ? "未结算" : v.DealTime, v.SellScore, v.SellMoney, v.Fee, v.DealStatus == 0 ? "等待结算" : v.DealStatus == 2 ? SetFontColor.Green("结算完成") : SetFontColor.Red("拒绝结算"), '<a href="###" onclick="javascript:OrderInfo(this);" >查看</a>'],
+                        e: ["<td style='display:none'>" + v.BankName + "</td><td style='display:none'>" + v.BankAddr + "</td><td style='display:none'>" + v.BankAcc + "</td><td style='display:none'>" + v.RealName + "</td>"]
+                    }
+                }
+            }).Bind();
+            taobj = dataBind.tableObj;
+        }
+        var OrderInfo = function (obj) {
+            var values = taobj.GetRowValues($(obj));
+            $("#TrueName").text(values[11]);
+            $("#BankName").text(values[8]);
+            $("#BankCode").text(values[10]);
+            $("#BankAddess").text(values[9]);
+            tipsWindown("查看银行信息", "id:AgentInfoDiv", "305", "240", "", "", "false", "");
+            //OpeIframeWindow("bankInfo", "查看银行信息", {
+            //    autoOpen: true,
+            //    height: 240,
+            //    width: 500,
+            //    modal: true
+            //}, true);
+        }
+        function CloseDiv() {
+            $("#windownbg").remove();
+            $("#windown-box").fadeOut("slow", function () { $(this).remove(); });
+        }
+        //（刷新页面）
+        function ShowAllAgent() {
+
+            window.location.reload();
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="ZZC">
+        <div id="AgentInfoDiv" style="display: none">
+            <!--     <div class="table">-->
+            <table width="300px" border="1" bordercolor="#CCCCCC" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td height="35" class="bg" width="30%">
+                        真实姓名
+                    </td>
+                    <td width="70%">
+                        <span id="TrueName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="35" class="bg">
+                        开户行
+                    </td>
+                    <td>
+                        <span id="BankName"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="35" class="bg">
+                        开户行帐号
+                    </td>
+                    <td>
+                        <span id="BankCode"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="35" class="bg">
+                        开户行地址
+                    </td>
+                    <td>
+                        <span id="BankAddess"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center" style="border: none;"></td>
+                </tr>
+            </table>
+            <span>
+                <img src="images/qd.png" style="margin-left:130px; text-align:center; margin-top: 5px;" onclick="javascript:CloseDiv()" />
+            </span>
+            <!--        </div>-->
+        </div>
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="tab_nav_div">
+                <li class="title">提款记录</li>
+            </div>
+            <div class="right2">
+                <!--条件查询-->
+                <div class="right2-top" style="width:95%; margin:auto;">
+                    <p>
+                    </p>
+
+
+                    <span id="lx" name="lx" style=" height: 25px; float: left;">
+                        <p style="color:#6B6B6B;">开始时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="BeginTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                        </span>
+
+
+                        <p style="color:#6B6B6B;">结束时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="EndTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+                        </span>
+
+
+
+
+
+                        <a href="#" class="button2"><span class="an" onclick="ShowData()">搜索</span></a>
+                        <p style="color:#6B6B6B;" countscore=CountScore id="CountScore"></p>
+                    </span>
+
+
+                </div>
+                <div class="right4">
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr class="STYLE5 ff">
+                            <td width="7%" height="30px">序号</td>
+                            <td width="10%">订单号</td>
+                            <td width="8%">结算时间</td>
+                            <td width="7%">结算金币</td>
+                            <td width="7%">结算金额</td>
+                            <td width="14%">手续费</td>
+                            <td width="11%">状态</td>
+                            <td width="10%">账户信息</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>

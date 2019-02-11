@@ -1,0 +1,107 @@
+﻿
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>代理平台</title>
+    <link rel="stylesheet" type="text/css" href="style/css.css" />
+    <link href="/style/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/js/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+    <script src="/js/ManageCommon.js" type="text/javascript"></script>
+    <script src="/js/ManageTable.js" type="text/javascript"></script>
+    <script src="js/My97DatePicker/WdatePicker.js"></script>
+
+    <script type="text/javascript">
+        var pURL = "/ashx/AgentManage.ashx";
+        var type = new Array();
+        //页面初始化
+        $(document).ready(function () {
+            $("#BeginTime").SetDefaultDate(0, true);
+            $("#EndTime").SetDefaultDate(0, true);
+            getGameList()
+            //ShowData()
+        });
+
+        var ShowData = function () {
+            new BindData({
+                serverName: pURL,
+                postData: { doType: 23, keyword: $('#keyword').val(), sType: $("#ddlSearchType").val(), sTime: $("#BeginTime").val(), eTime: $("#EndTime").val(), r: Math.random() },
+                bData: function (v) {
+                    return {
+                        k: v.PageView_RowNo, d: [gameList[v.KindID], roomList[v.ServerID], v.Accounts, v.GameID, v.Score, v.Revenue, v.PlayTimeCount, v.InsertTime]
+                    }
+                }
+            }).Bind();
+
+        }
+        var roomList = new Array(), gameList = new Array()
+        function getGameList() {
+            $.ajaxSetup({ async: false })
+            $.post(pURL, {doType:32}, function (data) {
+                var data = $.parseJSON(data);
+                $.each(data, function () {
+                    gameList[this.KindID] = this.KindName
+                });
+            })
+
+            $.post(pURL, { doType:33,kid: 0 }, function (data) {
+                var roomJson = $.parseJSON(data);
+                $.each(roomJson, function () {
+                    roomList[this.ServerID] = this.ServerName
+                });
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <div id="ZZC">
+        <!--右侧内容-->
+        <div id="buttonDiv" class="main">
+            <div class="tab_nav_div">
+                <li class="title">游戏记录</li>
+            </div>
+            <div class="right2">
+                <!--条件查询-->
+                <div class="right2-top" style="width: 95%">
+                    <span id="lx" name="lx" style=" height: 25px; float: left;">
+                        <p style="color:#000;">开始时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="BeginTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        </span>
+                        <p style="color:#000;">结束时间：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input name="x1" type="text" id="EndTime" class="Time" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        </span>
+                        <p style="color:#000;">查询条件：</p>
+                        <span class="input" style="margin-top:7px;">
+                            <input class="x8" type="text" id="keyword" value="" placeholder="请输入用户账号/代理号">
+                        </span>
+                        <span class="input" style="margin-top:7px;">
+                            <select class="x8" id="ddlSearchType">
+                                <option value="1">按用户帐号</option>
+                                <option value="2">代理号</option>
+                            </select>
+                        </span>
+                        <a href="javascript:ShowData();" class="button2"><span class="an">搜索</span></a>
+                    </span>
+                </div>
+                <div class="right4">
+                    <table width="95%" border="1" bordercolor="#000000" id="TableList" cellpadding="0" cellspacing="0">
+                        <tr bgcolor="#b2b2b2" class="STYLE5"><td width="5%" height="30px">游戏</td><td width="5%">房间</td><td width="5%">帐号</td><td width="5%">游戏ID</td><td width="5%">输赢积分</td><td width="7%">税收/服务费</td><td width="5%">游戏时长</td><td width="8%">插入时间</td></tr>
+                    </table>
+                </div>
+                <div class="right3">
+                    <div class="page">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</body>
+</html>
